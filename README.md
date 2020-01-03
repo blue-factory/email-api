@@ -14,11 +14,11 @@ The provider corresponds and attribute of **channel** and allows to identify wha
 
 In this api we will find the implementation of only 3 providers. Find **Providers** implementation at the [`./provider`](./lib) folder.
 
-| Name                                   | Description                            | ENV                                                                                         |
-| -------------------------------------- | -------------------------------------- | ------------------------------------------------------------------------------------------- |
-| [Sendgrid](https://sendgrid.com/)      | Free Send 40,000 month.                | `PROVIDER_SENDGRID_API_KEY`: string                                                         |
-| [Mandrill](https://mandrill.com/)      | Free Send 10,000 month.                | `PROVIDER_MANDRIL_API_KEY`: string                                                          |
-| [AWS SES](https://aws.amazon.com/ses/) | \$0.10 for every 1,000 emails you send | `PROVIDER_SES_AWS_KEY_ID`, `PROVIDER_SES_AWS_SECRET_KEY`, `PROVIDER_SES_AWS_REGION`: string |
+| Name                                   | Description                            | ENV (each with prefix `PROVIDER_`)                               |
+| -------------------------------------- | -------------------------------------- | ---------------------------------------------------------------- |
+| [Sendgrid](https://sendgrid.com/)      | Free Send 40,000 month.                | `SENDGRID_API_KEY`: string                                       |
+| [Mandrill](https://mandrill.com/)      | Free Send 10,000 month.                | `MANDRIL_API_KEY`: string                                        |
+| [AWS SES](https://aws.amazon.com/ses/) | \$0.10 for every 1,000 emails you send | `SES_AWS_KEY_ID`, `SES_AWS_SECRET_KEY`, `SES_AWS_REGION`: string |
 
 ## gRPC Service
 
