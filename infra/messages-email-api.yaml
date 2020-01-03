@@ -1,0 +1,65 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: messages-email-api
+  labels:
+    app: messages-email-api
+    service: messages-email-api
+spec:
+  ports:
+    - port: 5060
+      name: grpc
+  selector:
+    app: messages-email-api
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: messages-email-api
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: messages-email-api
+  labels:
+    app: messages-email-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: messages-email-api
+  template:
+    metadata:
+      labels:
+        app: messages-email-api
+    spec:
+      serviceAccountName: messages-email-api
+      containers:
+        - name: messages-email-api
+          image: microapis/messages-email-api:0.1.0
+          ports:
+            - containerPort: 5060
+          env:
+            - name: PORT
+              value: "5060"
+            - name: HOST
+              value: messages-email-api
+            - name: PROVIDERS
+              value: sendgrid,mandrill,ses
+            - name: PROVIDER_SENDGRID_API_KEY
+              value: <PROVIDER_SENDGRID_API_KEY>
+            - name: PROVIDER_MANDRIL_API_KEY
+              value: <PROVIDER_MANDRIL_API_KEY>
+            - name: PROVIDER_SES_AWS_KEY_ID
+              value: <SES_SES_AWS_KEY_ID>
+            - name: PROVIDER_SES_AWS_SECRET_KEY
+              value: <SES_AWS_SECRET_KEY>
+            - name: PROVIDER_SES_AWS_REGION
+              value: <SES_AWS_REGION>
+          resources:
+            requests:
+              cpu: 200m
+              memory: 512Mi
+            limits:
+              cpu: 400m
+              memory: 1024Mi
