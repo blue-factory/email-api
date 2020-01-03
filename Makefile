@@ -22,7 +22,7 @@ run r:
 	@echo "[running] Running service..."
 	@go run cmd/main.go
 
-build b: proto
+build b:
 	@echo "[build] Building service..."
 	@cd cmd/scheduler && go build -o $(BIN)
 
@@ -38,7 +38,7 @@ docker-login dl:
 	@echo "[docker] Login to docker..."
 	@docker login -u $(DOCKER_USER) -p $(DOCKER_PASS)
 
-push p: proto linux docker docker-login
+push p: linux docker docker-login
 	@echo "[docker] pushing $(REGISTRY_URL)/$(SVC):$(VERSION)"
 	@docker tag $(SVC):$(VERSION) $(REGISTRY_URL)/$(SVC):$(VERSION)
 	@docker push $(REGISTRY_URL)/$(SVC):$(VERSION)
@@ -52,12 +52,4 @@ stop s:
 	@echo "[docker-compose] Stopping docker-compose..."
 	@docker-compose down
 
-clean-proto cp:
-	@echo "[clean-proto] Cleaning proto files..."
-	@rm -rf proto/*.pb.go || true
-
-proto pro: clean-proto
-	@echo "[proto] Generating proto file..."
-	@protoc --go_out=plugins=grpc:. ./proto/*.proto 
-
-.PHONY: clean c run r build b linux l docker d docker-login dl push p compose co stop s clean-proto cp proto pro
+.PHONY: clean c run r build b linux l docker d docker-login dl push p compose co stop s
