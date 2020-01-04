@@ -2,11 +2,11 @@
 
 The microservice that extends from [Messages API](https://github.com/microapis/messages-api) is responsible for sending emails through several providers such as Sendgrid, Mandrill or AWS SES.
 
-As explained in the Messages API repository, it can be seen that there are three models, messages, channel and provider. To know more you can read the readme of Messages API. [[Link]](https://github.com/microapis/messages-hook-api)
+As explained in the Messages API repository, it can be seen that there are three models, messages, channel and provider. To know more you can read the readme of Messages API.
 
 ## Services Architecture
 
-The solution consists of a central microservice that is connected to the queue and the database. On the other hand, there are several **Channel APIs** implementations that were registered to [Messages API](https://github.com/microapis/messages-api).
+The solution consists of a central microservice that is connected to the queue and the database. On the other hand, there are several **Channel APIs** implementations that were registered to Messages API.
 
 [![Architecture of
 microservices](./docs/images/messages-email-architecture.png)](./docs/images/messages-email-architecture.png)
