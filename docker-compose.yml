@@ -8,13 +8,13 @@ services:
     image: redis
   messages-api:
     container_name: messages-api
-    image: microapis/messages-api:0.1.0
+    image: microapis/messages-api:0.1.1
     ports:
       - 5050:5050
-      environment:
-        - PORT=5050
-        - REDIS_HOST=messages-redis
-        - REDIS_PORT=6379
+    environment:
+      - PORT=5050
+      - REDIS_HOST=messages-redis
+      - REDIS_PORT=6379
     depends_on:
       - messages-email-api
     links:
@@ -25,7 +25,8 @@ services:
   #
   messages-email-api:
     container_name: messages-email-api
-    build: .
+    # build: .
+    image: microapis/messages-email-api:0.1.1
     ports:
       - 5060:5060
     environment:
