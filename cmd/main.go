@@ -16,7 +16,7 @@ import (
 
 var (
 	ses      *provider.SESEmailProvider
-	sendgrid *provider.SengridEmailProvider
+	sendgrid *provider.SendgridEmailProvider
 	mandrill *provider.MandrillEmailProvider
 )
 
@@ -36,8 +36,8 @@ func (s *service) Approve(content string) (valid bool, err error) {
 	}
 
 	switch m.Provider {
-	case "ses":
-		err = ses.Approve(m)
+	// case "ses":
+	// 	err = ses.Approve(m)
 	case "sendgrid":
 		err = sendgrid.Approve(m)
 	case "mandrill":
@@ -67,8 +67,8 @@ func (s *service) Deliver(content string) error {
 	}
 
 	switch m.Provider {
-	case "ses":
-		err = ses.Deliver(m)
+	// case "ses":
+	// 	err = ses.Deliver(m)
 	case "sendgrid":
 		err = sendgrid.Deliver(m)
 	case "mandrill":
@@ -98,27 +98,18 @@ func main() {
 	// iterate over providers name
 	for _, v := range ppn {
 		switch v {
-		case "ses":
-			ses = &provider.SESEmailProvider{
-				Name:   v,
-				Params: provider.ParamsSES{},
-			}
-			pp = append(pp, &messages.Provider{Name: v, Params: provider.ParamsSES{}})
-			err = provider.Load(ses)
-		case "sendgrid":
-			sendgrid = &provider.SengridEmailProvider{
-				Name:   v,
-				Params: provider.ParamsSendGrid{},
-			}
-			pp = append(pp, &messages.Provider{Name: v, Params: provider.ParamsSendGrid{}})
-			err = provider.Load(sendgrid)
-		case "mandrill":
-			mandrill = &provider.MandrillEmailProvider{
-				Name:   v,
-				Params: provider.ParamsMandrill{},
-			}
-			pp = append(pp, &messages.Provider{Name: v, Params: provider.ParamsMandrill{}})
-			err = provider.Load(mandrill)
+		case provider.SESProvider:
+			ses = provider.NewSES()
+			err = ses.LoadEnv()
+			pp = append(pp, ses.ToProvider())
+		case provider.SendgridProvider:
+			sendgrid = provider.NewSendgrid()
+			err = sendgrid.LoadEnv()
+			pp = append(pp, ses.ToProvider())
+		case provider.MandrillProvider:
+			mandrill = provider.NewMandrill()
+			err = mandrill.LoadEnv()
+			pp = append(pp, ses.ToProvider())
 		}
 	}
 	if err != nil {
