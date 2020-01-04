@@ -6,7 +6,7 @@ As explained in the Messages API repository, it can be seen that there are three
 
 ## Services Architecture
 
-The solution consists of a central microservice that is connected to the queue and the database. On the other hand, there are several **Channel APIs** implementations that were registered to Messages API.
+The solution consists of a central microservice that is connected to the queue and the database. On the other hand, there are several **Channel APIs** implementations that were registered to [Messages API](https://github.com/microapis/messages-api).
 
 [![Architecture of
 microservices](./docs/images/messages-email-architecture.png)](./docs/images/messages-email-architecture.png)
