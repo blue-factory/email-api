@@ -35,3 +35,50 @@ service MessageBackendService {
   rpc Deliver(MessageBackendDeliverRequest) returns (MessageBackendDeliverResponse) {}
 }
 ```
+
+## Model
+
+```go
+Email {
+  from:       string
+  from_name:  string
+  to:         []string
+  reply_to:   []string
+  subject:    string
+  text:       string
+  html:       string
+  provider:   string
+}
+```
+
+## Commands (Development)
+
+`make build`: build user service for osx.
+
+`make linux`: build user service for linux os.
+
+`make docker`: build docker.
+
+`docker run -it -p 5060:5060 messages-email-api`: run docker.
+
+**Run messages service:**
+
+```sh
+HOST=<host> \
+PORT=<port> \
+MESSAGES_HOST=<messages-host> \
+MESSAGES_PORT=<messages-port> \
+PROVIDERS=<providers> \
+PROVIDER_SENDGRID_API_KEY=<> \
+PROVIDER_MANDRIL_API_KEY=<> \
+PROVIDER_SES_AWS_KEY_ID=<> \
+PROVIDER_SES_AWS_SECRET_KEY=<> \
+PROVIDER_SES_AWS_REGION=<> \
+./bin/messages-api
+```
+
+## TODO
+
+- [ ] Task 1.
+- [ ] Task 2.
+- [ ] Task 3.
