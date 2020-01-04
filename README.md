@@ -17,7 +17,7 @@ Corresponds to the type of notification that could be sent, for this there must 
 
 ## Providers
 
-The provider corresponds and attribute of **channel** and allows to identify what types of messages are available for a specific channel.
+The provider is an attribute of **channel** and allows to identify what types of messages are available for a specific channel.
 
 In this api we will find the implementation of only 3 providers. Find **Providers** implementation at the [`./provider`](./lib) folder.
 
@@ -47,7 +47,7 @@ Email {
   subject:    string
   text:       string
   html:       string
-  provider:   string
+  provider:   string  // sendgrid, mandrill or ses
 }
 ```
 
