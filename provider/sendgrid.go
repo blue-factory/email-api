@@ -1,40 +1,54 @@
 package provider
 
 import (
+	"errors"
 	"log"
+	"os"
+	"strings"
 
 	"github.com/microapis/messages-api"
 
 	"github.com/sendgrid/sendgrid-go"
 	"github.com/sendgrid/sendgrid-go/helpers/mail"
+	"github.com/stoewer/go-strcase"
 )
 
-// ParamsSendGrid ...
-type ParamsSendGrid struct {
-	APIKey string `env:"SENDGRID_API_KEY"`
-}
+const (
+	// SendgridProvider the provider name
+	SendgridProvider = "sendgrid"
+	// SendgridAPIKey the sendgrid api key
+	SendgridAPIKey = "SendgridApiKey"
+)
 
-// SetParam ...
-func (p *ParamsSendGrid) SetParam(key string, value string) {
-	switch key {
-	case "APIKeys":
-		p.APIKey = value
+// SendgridEmailProvider ...
+type SendgridEmailProvider messages.Provider
+
+// NewSendgrid ...
+func NewSendgrid() *SendgridEmailProvider {
+	p := &SendgridEmailProvider{
+		Name:   SendgridProvider,
+		Params: make(map[string]string),
 	}
+
+	p.Params[SendgridAPIKey] = ""
+
+	return p
 }
 
-// SengridEmailProvider ...
-type SengridEmailProvider EmailProvider
+// Keys ...
+func (p *SendgridEmailProvider) Keys() []string {
+	k := make([]string, 0)
+	k = append(k, SendgridAPIKey)
+	return k
+}
 
 // Approve ...
-func (p *SengridEmailProvider) Approve(*messages.Email) error {
+func (p *SendgridEmailProvider) Approve(*messages.Email) error {
 	return nil
 }
 
 // Deliver ...
-func (p *SengridEmailProvider) Deliver(m *messages.Email) error {
-	// cast params interface
-	params := p.Params.(ParamsSendGrid)
-
+func (p *SendgridEmailProvider) Deliver(m *messages.Email) error {
 	// define from and to values
 	from := mail.NewEmail(m.FromName, m.From)
 	to := mail.NewEmail(m.To[0], m.To[0])
@@ -48,7 +62,7 @@ func (p *SengridEmailProvider) Deliver(m *messages.Email) error {
 	message := mail.NewSingleEmail(from, m.Subject, to, m.Text, m.HTML)
 
 	// create client
-	client := sendgrid.NewSendClient(params.APIKey)
+	client := sendgrid.NewSendClient(p.Params[SendgridAPIKey])
 
 	// send message
 	response, err := client.Send(message)
@@ -61,4 +75,25 @@ func (p *SengridEmailProvider) Deliver(m *messages.Email) error {
 	log.Println(response.Headers)
 
 	return nil
+}
+
+// LoadEnv ...
+func (p *SendgridEmailProvider) LoadEnv() error {
+	env := strings.ToUpper(strcase.UpperCamelCase(SendgridAPIKey))
+	value := os.Getenv("PROVIDER_" + env)
+	if value == "" {
+		return errors.New("PROVIDER_" + env + " env value not defined")
+	}
+
+	p.Params[SendgridAPIKey] = value
+
+	return nil
+}
+
+// ToProvider ...
+func (p *SendgridEmailProvider) ToProvider() *messages.Provider {
+	return &messages.Provider{
+		Name:   p.Name,
+		Params: p.Params,
+	}
 }

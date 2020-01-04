@@ -1,37 +1,46 @@
 package provider
 
 import (
+	"errors"
 	"html"
-
-	"github.com/microapis/messages-api"
+	"os"
+	"strings"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ses"
+	"github.com/microapis/messages-api"
+	"github.com/stoewer/go-strcase"
 )
 
-// ParamsSES ...
-type ParamsSES struct {
-	AwsKeyID     string `env:"AWS_KEY_ID"`
-	AwsSecretKey string `env:"AWS_SECRET_KEY"`
-	AwsRegion    string `env:"AWS_REGION"`
-}
-
-// SetParam ...
-func (p *ParamsSES) SetParam(key string, value string) {
-	switch key {
-	case "AwsKeyID":
-		p.AwsKeyID = value
-	case "AwsSecretKey":
-		p.AwsSecretKey = value
-	case "AwsRegion":
-		p.AwsRegion = value
-	}
-}
+const (
+	// SESProvider the provider name
+	SESProvider = "ses"
+	// SESAWSKeyID the SES key ID
+	SESAWSKeyID = "SesAwsKeyId"
+	// SESAWSSecretKey the SES secret key
+	SESAWSSecretKey = "SesAwsSecretKey"
+	// SESAWSRegion the SES secret key
+	SESAWSRegion = "SesAwsRegion"
+)
 
 // SESEmailProvider ...
-type SESEmailProvider EmailProvider
+type SESEmailProvider messages.Provider
+
+// NewSES ...
+func NewSES() *SESEmailProvider {
+	p := &SESEmailProvider{
+		Name:   SESProvider,
+		Params: make(map[string]string),
+	}
+
+	p.Params[SESAWSKeyID] = ""
+	p.Params[SESAWSSecretKey] = ""
+	p.Params[SESAWSRegion] = ""
+
+	return p
+}
 
 // Approve ...
 func (p *SESEmailProvider) Approve(*messages.Email) error {
@@ -40,13 +49,10 @@ func (p *SESEmailProvider) Approve(*messages.Email) error {
 
 // Deliver ...
 func (p *SESEmailProvider) Deliver(m *messages.Email) error {
-	// cast params interface
-	params := p.Params.(ParamsSES)
-
 	// define aws config credentials
 	config := &aws.Config{
-		Region:      aws.String(params.AwsRegion),
-		Credentials: credentials.NewStaticCredentials(params.AwsKeyID, params.AwsSecretKey, ""),
+		Region:      aws.String(p.Params[SESAWSRegion]),
+		Credentials: credentials.NewStaticCredentials(p.Params[SESAWSKeyID], p.Params[SESAWSSecretKey], ""),
 	}
 
 	// define aws session
@@ -98,4 +104,41 @@ func (p *SESEmailProvider) Deliver(m *messages.Email) error {
 	}
 
 	return nil
+}
+
+// LoadEnv ...
+func (p *SESEmailProvider) LoadEnv() error {
+	env := strings.ToUpper(strcase.UpperCamelCase(SESAWSKeyID))
+	value := os.Getenv("PROVIDER_" + env)
+	if value == "" {
+		return errors.New("PROVIDER_" + env + " env value not defined")
+	}
+
+	p.Params[SESAWSKeyID] = value
+
+	env = strings.ToUpper(strcase.UpperCamelCase(SESAWSSecretKey))
+	value = os.Getenv("PROVIDER_" + env)
+	if value == "" {
+		return errors.New("PROVIDER_" + env + " env value not defined")
+	}
+
+	p.Params[SESAWSSecretKey] = value
+
+	env = strings.ToUpper(strcase.UpperCamelCase(SESAWSRegion))
+	value = os.Getenv("PROVIDER_" + env)
+	if value == "" {
+		return errors.New("PROVIDER_" + env + " env value not defined")
+	}
+
+	p.Params[SESAWSRegion] = value
+
+	return nil
+}
+
+// ToProvider ...
+func (p *SESEmailProvider) ToProvider() *messages.Provider {
+	return &messages.Provider{
+		Name:   p.Name,
+		Params: p.Params,
+	}
 }

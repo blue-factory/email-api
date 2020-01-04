@@ -1,28 +1,44 @@
 package provider
 
 import (
+	"errors"
 	"log"
-
-	"github.com/microapis/messages-api"
+	"os"
+	"strings"
 
 	"github.com/keighl/mandrill"
+	"github.com/microapis/messages-api"
+	"github.com/stoewer/go-strcase"
 )
 
-// ParamsMandrill ...
-type ParamsMandrill struct {
-	APIKey string `env:"MANDRILL_API_KEY"`
-}
-
-// SetParam ...
-func (p *ParamsMandrill) SetParam(key string, value string) {
-	switch key {
-	case "APIKeys":
-		p.APIKey = value
-	}
-}
+const (
+	// MandrillProvider the provider name
+	MandrillProvider = "mandrill"
+	// MandrillAPIKey the mandrill api key
+	MandrillAPIKey = "ApiKey"
+)
 
 // MandrillEmailProvider ...
-type MandrillEmailProvider EmailProvider
+type MandrillEmailProvider messages.Provider
+
+// NewSendgrid ...
+func NewMandrill() *MandrillEmailProvider {
+	p := &MandrillEmailProvider{
+		Name:   MandrillProvider,
+		Params: make(map[string]string),
+	}
+
+	p.Params[MandrillAPIKey] = ""
+
+	return p
+}
+
+// Keys ...
+func (p *MandrillEmailProvider) Keys() []string {
+	k := make([]string, 0)
+	k = append(k, MandrillAPIKey)
+	return k
+}
 
 // Approve ...
 func (p *MandrillEmailProvider) Approve(*messages.Email) error {
@@ -31,11 +47,8 @@ func (p *MandrillEmailProvider) Approve(*messages.Email) error {
 
 // Deliver ...
 func (p *MandrillEmailProvider) Deliver(m *messages.Email) error {
-	// cast params interface
-	params := p.Params.(ParamsMandrill)
-
 	// create client
-	client := mandrill.ClientWithKey(params.APIKey)
+	client := mandrill.ClientWithKey(p.Params[MandrillAPIKey])
 
 	// if not has HTML, set text message to HTML
 	if m.HTML == "" {
@@ -66,4 +79,25 @@ func (p *MandrillEmailProvider) Deliver(m *messages.Email) error {
 	log.Println(response[0].RejectionReason)
 
 	return nil
+}
+
+// LoadEnv ...
+func (p *MandrillEmailProvider) LoadEnv() error {
+	env := strings.ToUpper(strcase.UpperCamelCase(MandrillAPIKey))
+	value := os.Getenv("PROVIDER_" + env)
+	if value == "" {
+		return errors.New("PROVIDER_" + env + " env value not defined")
+	}
+
+	p.Params[MandrillAPIKey] = value
+
+	return nil
+}
+
+// ToProvider ...
+func (p *MandrillEmailProvider) ToProvider() *messages.Provider {
+	return &messages.Provider{
+		Name:   p.Name,
+		Params: p.Params,
+	}
 }
