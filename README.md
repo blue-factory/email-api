@@ -1,6 +1,6 @@
 # Messages Email API
 
-The microservice that extends from [Messages API](https://github.com/microapis/messages-api) is responsible for sending emails through several providers such as Sendgrid, Mandrill or AWS SES.
+Microservice that extends from [Messages API](https://github.com/microapis/messages-api) is responsible for sending emails through several providers such as Sendgrid, Mandrill or AWS SES.
 
 As explained in the Messages API repository, it can be seen that there are three models, messages, channel and provider. To know more you can read the readme of Messages API.
 
