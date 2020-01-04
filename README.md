@@ -4,6 +4,13 @@ The microservice that extends from [Messages API](https://github.com/microapis/m
 
 As explained in the Messages API repository, it can be seen that there are three models, messages, channel and provider. To know more you can read the readme of Messages API. [[Link]](https://github.com/microapis/messages-hook-api)
 
+## Services Architecture
+
+The solution consists of a central microservice that is connected to the queue and the database. On the other hand, there are several **Channel APIs** implementations that were registered to Messages API.
+
+[![Architecture of
+microservices](./docs/images/messages-email-architecture.png)](./docs/images/messages-email-architecture.png)
+
 ## Channels
 
 Corresponds to the type of notification that could be sent, for this there must be the implementation of that channel as a gRPC service through an API.
