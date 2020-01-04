@@ -8,8 +8,8 @@
 #
 # Internal variables
 #
-VERSION=0.1.0
-SVC=messages.email-api
+VERSION=0.1.1
+SVC=messages-email-api
 BIN_PATH=$(PWD)/bin
 BIN=$(BIN_PATH)/$(SVC)
 REGISTRY_URL=$(DOCKER_USER)
