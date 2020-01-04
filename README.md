@@ -47,7 +47,7 @@ Email {
   subject:    string
   text:       string
   html:       string
-  provider:   string  // sendgrid, mandrill or ses
+  provider:   string  // sendgrid, mandrill, ses
 }
 ```
 
