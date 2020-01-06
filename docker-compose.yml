@@ -6,37 +6,38 @@ services:
   #
   messages-redis:
     image: redis
+    # ports:
+    #   - 6379:6379
   messages-api:
     container_name: messages-api
-    image: microapis/messages-api:0.1.1
+    # image: microapis/messages-api:0.1.1
+    build: ../messages-api
     ports:
       - 5050:5050
     environment:
       - PORT=5050
       - REDIS_HOST=messages-redis
       - REDIS_PORT=6379
-    depends_on:
-      - messages-email-api
+    # depends_on:
+    #   - messages-email-api
     links:
       - messages-redis
-
-  #
   # MESSAGES EMAIL API
   #
-  messages-email-api:
-    container_name: messages-email-api
-    # build: .
-    image: microapis/messages-email-api:0.1.1
-    ports:
-      - 5060:5060
-    environment:
-      - HOST=messages-email-api
-      - PORT=5060
-      - MESSAGES_HOST=messages-api
-      - MESSAGES_PORT=5050
-      - PROVIDERS=sendgrid,mandrill,ses
-      - PROVIDER_SENDGRID_API_KEY=<PROVIDER_SENDGRID_API_KEY>
-      - PROVIDER_MANDRIL_API_KEY=<PROVIDER_MANDRIL_API_KEY>
-      - PROVIDER_SES_AWS_KEY_ID=<SES_SES_AWS_KEY_ID>
-      - PROVIDER_SES_AWS_SECRET_KEY=<SES_AWS_SECRET_KEY>
-      - PROVIDER_SES_AWS_REGION=<SES_AWS_REGION>
+  # messages-email-api:
+  #   container_name: messages-email-api
+  #   build: .
+  #   # image: microapis/messages-email-api:0.1.1
+  #   ports:
+  #     - 5060:5060
+  #   environment:
+  #     - PORT=5060
+  #     - HOST=messages-email-api
+  #     - MESSAGES_HOST=messages-api
+  #     - MESSAGES_PORT=5050
+  #     - PROVIDERS=sendgrid,mandrill,ses
+  #     - PROVIDER_SENDGRID_API_KEY=<PROVIDER_SENDGRID_API_KEY>
+  #     - PROVIDER_MANDRILL_API_KEY=<PROVIDER_MANDRILL_API_KEY>
+  #     - PROVIDER_SES_AWS_KEY_ID=<SES_SES_AWS_KEY_ID>
+  #     - PROVIDER_SES_AWS_SECRET_KEY=<SES_AWS_SECRET_KEY>
+  #     - PROVIDER_SES_AWS_REGION=<SES_AWS_REGION>
