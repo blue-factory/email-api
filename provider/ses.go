@@ -11,6 +11,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ses"
 	"github.com/microapis/messages-api"
+	"github.com/microapis/messages-api/channel"
 	"github.com/stoewer/go-strcase"
 )
 
@@ -26,7 +27,7 @@ const (
 )
 
 // SESEmailProvider ...
-type SESEmailProvider messages.Provider
+type SESEmailProvider channel.Provider
 
 // NewSES ...
 func NewSES() *SESEmailProvider {
@@ -108,7 +109,7 @@ func (p *SESEmailProvider) Deliver(m *messages.Email) error {
 
 // LoadEnv ...
 func (p *SESEmailProvider) LoadEnv() error {
-	env := strings.ToUpper(strcase.UpperCamelCase(SESAWSKeyID))
+	env := strings.ToUpper(strcase.SnakeCase(SESAWSKeyID))
 	value := os.Getenv("PROVIDER_" + env)
 	if value == "" {
 		return errors.New("PROVIDER_" + env + " env value not defined")
@@ -116,7 +117,7 @@ func (p *SESEmailProvider) LoadEnv() error {
 
 	p.Params[SESAWSKeyID] = value
 
-	env = strings.ToUpper(strcase.UpperCamelCase(SESAWSSecretKey))
+	env = strings.ToUpper(strcase.SnakeCase(SESAWSSecretKey))
 	value = os.Getenv("PROVIDER_" + env)
 	if value == "" {
 		return errors.New("PROVIDER_" + env + " env value not defined")
@@ -124,7 +125,7 @@ func (p *SESEmailProvider) LoadEnv() error {
 
 	p.Params[SESAWSSecretKey] = value
 
-	env = strings.ToUpper(strcase.UpperCamelCase(SESAWSRegion))
+	env = strings.ToUpper(strcase.SnakeCase(SESAWSRegion))
 	value = os.Getenv("PROVIDER_" + env)
 	if value == "" {
 		return errors.New("PROVIDER_" + env + " env value not defined")
@@ -136,8 +137,8 @@ func (p *SESEmailProvider) LoadEnv() error {
 }
 
 // ToProvider ...
-func (p *SESEmailProvider) ToProvider() *messages.Provider {
-	return &messages.Provider{
+func (p *SESEmailProvider) ToProvider() *channel.Provider {
+	return &channel.Provider{
 		Name:   p.Name,
 		Params: p.Params,
 	}

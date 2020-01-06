@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/microapis/messages-api"
+	"github.com/microapis/messages-api/channel"
 
 	"github.com/sendgrid/sendgrid-go"
 	"github.com/sendgrid/sendgrid-go/helpers/mail"
@@ -21,7 +22,7 @@ const (
 )
 
 // SendgridEmailProvider ...
-type SendgridEmailProvider messages.Provider
+type SendgridEmailProvider channel.Provider
 
 // NewSendgrid ...
 func NewSendgrid() *SendgridEmailProvider {
@@ -79,7 +80,7 @@ func (p *SendgridEmailProvider) Deliver(m *messages.Email) error {
 
 // LoadEnv ...
 func (p *SendgridEmailProvider) LoadEnv() error {
-	env := strings.ToUpper(strcase.UpperCamelCase(SendgridAPIKey))
+	env := strings.ToUpper(strcase.SnakeCase(SendgridAPIKey))
 	value := os.Getenv("PROVIDER_" + env)
 	if value == "" {
 		return errors.New("PROVIDER_" + env + " env value not defined")
@@ -91,8 +92,8 @@ func (p *SendgridEmailProvider) LoadEnv() error {
 }
 
 // ToProvider ...
-func (p *SendgridEmailProvider) ToProvider() *messages.Provider {
-	return &messages.Provider{
+func (p *SendgridEmailProvider) ToProvider() *channel.Provider {
+	return &channel.Provider{
 		Name:   p.Name,
 		Params: p.Params,
 	}

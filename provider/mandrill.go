@@ -8,6 +8,7 @@ import (
 
 	"github.com/keighl/mandrill"
 	"github.com/microapis/messages-api"
+	"github.com/microapis/messages-api/channel"
 	"github.com/stoewer/go-strcase"
 )
 
@@ -15,13 +16,13 @@ const (
 	// MandrillProvider the provider name
 	MandrillProvider = "mandrill"
 	// MandrillAPIKey the mandrill api key
-	MandrillAPIKey = "ApiKey"
+	MandrillAPIKey = "MandrillApiKey"
 )
 
 // MandrillEmailProvider ...
-type MandrillEmailProvider messages.Provider
+type MandrillEmailProvider channel.Provider
 
-// NewSendgrid ...
+// NewMandrill ...
 func NewMandrill() *MandrillEmailProvider {
 	p := &MandrillEmailProvider{
 		Name:   MandrillProvider,
@@ -83,7 +84,7 @@ func (p *MandrillEmailProvider) Deliver(m *messages.Email) error {
 
 // LoadEnv ...
 func (p *MandrillEmailProvider) LoadEnv() error {
-	env := strings.ToUpper(strcase.UpperCamelCase(MandrillAPIKey))
+	env := strings.ToUpper(strcase.SnakeCase(MandrillAPIKey))
 	value := os.Getenv("PROVIDER_" + env)
 	if value == "" {
 		return errors.New("PROVIDER_" + env + " env value not defined")
@@ -95,8 +96,8 @@ func (p *MandrillEmailProvider) LoadEnv() error {
 }
 
 // ToProvider ...
-func (p *MandrillEmailProvider) ToProvider() *messages.Provider {
-	return &messages.Provider{
+func (p *MandrillEmailProvider) ToProvider() *channel.Provider {
+	return &channel.Provider{
 		Name:   p.Name,
 		Params: p.Params,
 	}
