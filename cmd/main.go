@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"log"
@@ -9,78 +8,17 @@ import (
 	"strings"
 
 	mc "github.com/microapis/clients-go/messages"
-	"github.com/microapis/messages-api"
 	"github.com/microapis/messages-api/backend"
 	"github.com/microapis/messages-api/channel"
+	backendEmail "github.com/microapis/messages-email-api/backend"
 	"github.com/microapis/messages-email-api/provider"
 )
 
 var (
-	ses      *provider.SESEmailProvider
-	sendgrid *provider.SendgridEmailProvider
-	mandrill *provider.MandrillEmailProvider
+	ses      *provider.SESProvider
+	sendgrid *provider.SendgridProvider
+	mandrill *provider.MandrillProvider
 )
-
-type service struct{}
-
-func (s *service) Approve(content string) (valid bool, err error) {
-	if content == "" {
-		return false, errors.New("Invalid message content")
-	}
-
-	fmt.Println("here in approve", content)
-	m := new(messages.Email)
-
-	err = json.Unmarshal([]byte(content), m)
-	if err != nil {
-		return false, err
-	}
-
-	switch m.Provider {
-	// case "ses":
-	// 	err = ses.Approve(m)
-	case "sendgrid":
-		err = sendgrid.Approve(m)
-	case "mandrill":
-		err = mandrill.Approve(m)
-	}
-	if err != nil {
-		return false, err
-	}
-
-	// TODO(ca): validate content to avoid breakout
-	fmt.Println(m)
-
-	return true, nil
-}
-
-func (s *service) Deliver(content string) error {
-	if content == "" {
-		return errors.New("Invalid message content")
-	}
-
-	fmt.Println("here in deliver", content)
-	m := new(messages.Email)
-
-	err := json.Unmarshal([]byte(content), m)
-	if err != nil {
-		return err
-	}
-
-	switch m.Provider {
-	// case "ses":
-	// 	err = ses.Deliver(m)
-	case "sendgrid":
-		err = sendgrid.Deliver(m)
-	case "mandrill":
-		err = mandrill.Deliver(m)
-	}
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
 
 func main() {
 	var err error
@@ -99,15 +37,15 @@ func main() {
 	// iterate over providers name
 	for _, v := range ppn {
 		switch v {
-		case provider.SESProvider:
+		case provider.SESName:
 			ses = provider.NewSES()
 			err = ses.LoadEnv()
 			pp = append(pp, ses.ToProvider())
-		case provider.SendgridProvider:
+		case provider.SendgridName:
 			sendgrid = provider.NewSendgrid()
 			err = sendgrid.LoadEnv()
 			pp = append(pp, sendgrid.ToProvider())
-		case provider.MandrillProvider:
+		case provider.MandrillName:
 			mandrill = provider.NewMandrill()
 			err = mandrill.LoadEnv()
 			pp = append(pp, mandrill.ToProvider())
@@ -162,7 +100,7 @@ func main() {
 	addr = fmt.Sprintf("0.0.0.0:%s", port)
 
 	// define service with Approve and Deliver methods
-	svc := &service{}
+	svc := backendEmail.NewBackend(sendgrid, mandrill, ses)
 
 	// start grpc pigeon-ses-api service
 	log.Printf("Serving at %s", addr)
