@@ -11,6 +11,7 @@ import (
 	mc "github.com/microapis/clients-go/messages"
 	"github.com/microapis/messages-api"
 	"github.com/microapis/messages-api/backend"
+	"github.com/microapis/messages-api/channel"
 	"github.com/microapis/messages-email-api/provider"
 )
 
@@ -27,7 +28,7 @@ func (s *service) Approve(content string) (valid bool, err error) {
 		return false, errors.New("Invalid message content")
 	}
 
-	fmt.Println(content)
+	fmt.Println("here in approve", content)
 	m := new(messages.Email)
 
 	err = json.Unmarshal([]byte(content), m)
@@ -58,7 +59,7 @@ func (s *service) Deliver(content string) error {
 		return errors.New("Invalid message content")
 	}
 
-	fmt.Println(content)
+	fmt.Println("here in deliver", content)
 	m := new(messages.Email)
 
 	err := json.Unmarshal([]byte(content), m)
@@ -93,7 +94,7 @@ func main() {
 	// define provider slice names
 	ppn := strings.Split(providersEnv, ",")
 	// define providers slice
-	pp := make([]*messages.Provider, 0)
+	pp := make([]*channel.Provider, 0)
 
 	// iterate over providers name
 	for _, v := range ppn {
@@ -105,11 +106,11 @@ func main() {
 		case provider.SendgridProvider:
 			sendgrid = provider.NewSendgrid()
 			err = sendgrid.LoadEnv()
-			pp = append(pp, ses.ToProvider())
+			pp = append(pp, sendgrid.ToProvider())
 		case provider.MandrillProvider:
 			mandrill = provider.NewMandrill()
 			err = mandrill.LoadEnv()
-			pp = append(pp, ses.ToProvider())
+			pp = append(pp, mandrill.ToProvider())
 		}
 	}
 	if err != nil {
@@ -126,26 +127,13 @@ func main() {
 		log.Fatal(errors.New("MESSAGES_PORT value not defined"))
 	}
 
-	// create channel to register
-	c := &messages.Channel{
-		Name:      "email",
-		Host:      messagesHost,
-		Port:      messagesPort,
-		Providers: pp,
-	}
-
 	// register channel on messages-api
 	addr := fmt.Sprintf("%s:%s", messagesHost, messagesPort)
-	MessagesAPI := mc.NewService(addr)
-	err = MessagesAPI.Register(c)
-	if err != nil {
-		log.Fatalln(err)
+
+	host := os.Getenv("HOST")
+	if host == "" {
+		log.Fatal(errors.New("HOST value not defined"))
 	}
-
-	// async checker connection
-	go func() {
-
-	}()
 
 	// get grpc port env value:
 	port := os.Getenv("PORT")
@@ -153,6 +141,22 @@ func main() {
 		err := errors.New("invalid PORT env value")
 		log.Fatal(err)
 	}
+
+	// create channel to register
+	c := &channel.Channel{
+		Name:      "email",
+		Host:      host,
+		Port:      port,
+		Providers: pp,
+	}
+
+	MessagesAPI := mc.NewService(addr)
+	err = MessagesAPI.Register(c)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	log.Println("Channel email is registered on messages-api with providers:", c.ProvidersNames())
 
 	// define address value to grpc service
 	addr = fmt.Sprintf("0.0.0.0:%s", port)
