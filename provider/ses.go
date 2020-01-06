@@ -16,8 +16,8 @@ import (
 )
 
 const (
-	// SESProvider the provider name
-	SESProvider = "ses"
+	// SESName the provider name
+	SESName = "ses"
 	// SESAWSKeyID the SES key ID
 	SESAWSKeyID = "SesAwsKeyId"
 	// SESAWSSecretKey the SES secret key
@@ -26,13 +26,13 @@ const (
 	SESAWSRegion = "SesAwsRegion"
 )
 
-// SESEmailProvider ...
-type SESEmailProvider channel.Provider
+// SESProvider ...
+type SESProvider channel.Provider
 
 // NewSES ...
-func NewSES() *SESEmailProvider {
-	p := &SESEmailProvider{
-		Name:   SESProvider,
+func NewSES() *SESProvider {
+	p := &SESProvider{
+		Name:   SESName,
 		Params: make(map[string]string),
 	}
 
@@ -44,12 +44,12 @@ func NewSES() *SESEmailProvider {
 }
 
 // Approve ...
-func (p *SESEmailProvider) Approve(*messages.Email) error {
+func (p *SESProvider) Approve(*messages.Email) error {
 	return nil
 }
 
 // Deliver ...
-func (p *SESEmailProvider) Deliver(m *messages.Email) error {
+func (p *SESProvider) Deliver(m *messages.Email) error {
 	// define aws config credentials
 	config := &aws.Config{
 		Region:      aws.String(p.Params[SESAWSRegion]),
@@ -108,7 +108,7 @@ func (p *SESEmailProvider) Deliver(m *messages.Email) error {
 }
 
 // LoadEnv ...
-func (p *SESEmailProvider) LoadEnv() error {
+func (p *SESProvider) LoadEnv() error {
 	env := strings.ToUpper(strcase.SnakeCase(SESAWSKeyID))
 	value := os.Getenv("PROVIDER_" + env)
 	if value == "" {
@@ -137,7 +137,7 @@ func (p *SESEmailProvider) LoadEnv() error {
 }
 
 // ToProvider ...
-func (p *SESEmailProvider) ToProvider() *channel.Provider {
+func (p *SESProvider) ToProvider() *channel.Provider {
 	return &channel.Provider{
 		Name:   p.Name,
 		Params: p.Params,

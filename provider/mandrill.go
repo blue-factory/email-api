@@ -13,19 +13,19 @@ import (
 )
 
 const (
-	// MandrillProvider the provider name
-	MandrillProvider = "mandrill"
+	// MandrillName the provider name
+	MandrillName = "mandrill"
 	// MandrillAPIKey the mandrill api key
 	MandrillAPIKey = "MandrillApiKey"
 )
 
-// MandrillEmailProvider ...
-type MandrillEmailProvider channel.Provider
+// MandrillProvider ...
+type MandrillProvider channel.Provider
 
 // NewMandrill ...
-func NewMandrill() *MandrillEmailProvider {
-	p := &MandrillEmailProvider{
-		Name:   MandrillProvider,
+func NewMandrill() *MandrillProvider {
+	p := &MandrillProvider{
+		Name:   MandrillName,
 		Params: make(map[string]string),
 	}
 
@@ -35,19 +35,19 @@ func NewMandrill() *MandrillEmailProvider {
 }
 
 // Keys ...
-func (p *MandrillEmailProvider) Keys() []string {
+func (p *MandrillProvider) Keys() []string {
 	k := make([]string, 0)
 	k = append(k, MandrillAPIKey)
 	return k
 }
 
 // Approve ...
-func (p *MandrillEmailProvider) Approve(*messages.Email) error {
+func (p *MandrillProvider) Approve(*messages.Email) error {
 	return nil
 }
 
 // Deliver ...
-func (p *MandrillEmailProvider) Deliver(m *messages.Email) error {
+func (p *MandrillProvider) Deliver(m *messages.Email) error {
 	// create client
 	client := mandrill.ClientWithKey(p.Params[MandrillAPIKey])
 
@@ -83,7 +83,7 @@ func (p *MandrillEmailProvider) Deliver(m *messages.Email) error {
 }
 
 // LoadEnv ...
-func (p *MandrillEmailProvider) LoadEnv() error {
+func (p *MandrillProvider) LoadEnv() error {
 	env := strings.ToUpper(strcase.SnakeCase(MandrillAPIKey))
 	value := os.Getenv("PROVIDER_" + env)
 	if value == "" {
@@ -96,7 +96,7 @@ func (p *MandrillEmailProvider) LoadEnv() error {
 }
 
 // ToProvider ...
-func (p *MandrillEmailProvider) ToProvider() *channel.Provider {
+func (p *MandrillProvider) ToProvider() *channel.Provider {
 	return &channel.Provider{
 		Name:   p.Name,
 		Params: p.Params,

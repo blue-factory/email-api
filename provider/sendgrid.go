@@ -15,19 +15,19 @@ import (
 )
 
 const (
-	// SendgridProvider the provider name
-	SendgridProvider = "sendgrid"
+	// SendgridName the provider name
+	SendgridName = "sendgrid"
 	// SendgridAPIKey the sendgrid api key
 	SendgridAPIKey = "SendgridApiKey"
 )
 
-// SendgridEmailProvider ...
-type SendgridEmailProvider channel.Provider
+// SendgridProvider ...
+type SendgridProvider channel.Provider
 
 // NewSendgrid ...
-func NewSendgrid() *SendgridEmailProvider {
-	p := &SendgridEmailProvider{
-		Name:   SendgridProvider,
+func NewSendgrid() *SendgridProvider {
+	p := &SendgridProvider{
+		Name:   SendgridName,
 		Params: make(map[string]string),
 	}
 
@@ -37,19 +37,19 @@ func NewSendgrid() *SendgridEmailProvider {
 }
 
 // Keys ...
-func (p *SendgridEmailProvider) Keys() []string {
+func (p *SendgridProvider) Keys() []string {
 	k := make([]string, 0)
 	k = append(k, SendgridAPIKey)
 	return k
 }
 
 // Approve ...
-func (p *SendgridEmailProvider) Approve(*messages.Email) error {
+func (p *SendgridProvider) Approve(*messages.Email) error {
 	return nil
 }
 
 // Deliver ...
-func (p *SendgridEmailProvider) Deliver(m *messages.Email) error {
+func (p *SendgridProvider) Deliver(m *messages.Email) error {
 	// define from and to values
 	from := mail.NewEmail(m.FromName, m.From)
 	to := mail.NewEmail(m.To[0], m.To[0])
@@ -79,7 +79,7 @@ func (p *SendgridEmailProvider) Deliver(m *messages.Email) error {
 }
 
 // LoadEnv ...
-func (p *SendgridEmailProvider) LoadEnv() error {
+func (p *SendgridProvider) LoadEnv() error {
 	env := strings.ToUpper(strcase.SnakeCase(SendgridAPIKey))
 	value := os.Getenv("PROVIDER_" + env)
 	if value == "" {
@@ -92,7 +92,7 @@ func (p *SendgridEmailProvider) LoadEnv() error {
 }
 
 // ToProvider ...
-func (p *SendgridEmailProvider) ToProvider() *channel.Provider {
+func (p *SendgridProvider) ToProvider() *channel.Provider {
 	return &channel.Provider{
 		Name:   p.Name,
 		Params: p.Params,
