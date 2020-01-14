@@ -6,8 +6,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/microapis/messages-api"
-	"github.com/microapis/messages-api/channel"
+	"github.com/microapis/messages-lib/channel"
+	messagesemail "github.com/microapis/messages-email-api"
 
 	"github.com/sendgrid/sendgrid-go"
 	"github.com/sendgrid/sendgrid-go/helpers/mail"
@@ -22,16 +22,20 @@ const (
 )
 
 // SendgridProvider ...
-type SendgridProvider channel.Provider
+type SendgridProvider struct {
+	Root channel.Provider
+}
 
 // NewSendgrid ...
 func NewSendgrid() *SendgridProvider {
 	p := &SendgridProvider{
-		Name:   SendgridName,
-		Params: make(map[string]string),
+		Root: channel.Provider{
+			Name:   SendgridName,
+			Params: make(map[string]string),
+		},
 	}
 
-	p.Params[SendgridAPIKey] = ""
+	p.Root.Params[SendgridAPIKey] = ""
 
 	return p
 }
@@ -44,12 +48,12 @@ func (p *SendgridProvider) Keys() []string {
 }
 
 // Approve ...
-func (p *SendgridProvider) Approve(*messages.Email) error {
+func (p *SendgridProvider) Approve(*messagesemail.Message) error {
 	return nil
 }
 
 // Deliver ...
-func (p *SendgridProvider) Deliver(m *messages.Email) error {
+func (p *SendgridProvider) Deliver(m *messagesemail.Message) error {
 	// define from and to values
 	from := mail.NewEmail(m.FromName, m.From)
 	to := mail.NewEmail(m.To[0], m.To[0])
@@ -63,7 +67,7 @@ func (p *SendgridProvider) Deliver(m *messages.Email) error {
 	message := mail.NewSingleEmail(from, m.Subject, to, m.Text, m.HTML)
 
 	// create client
-	client := sendgrid.NewSendClient(p.Params[SendgridAPIKey])
+	client := sendgrid.NewSendClient(p.Root.Params[SendgridAPIKey])
 
 	// send message
 	response, err := client.Send(message)
@@ -86,7 +90,7 @@ func (p *SendgridProvider) LoadEnv() error {
 		return errors.New("PROVIDER_" + env + " env value not defined")
 	}
 
-	p.Params[SendgridAPIKey] = value
+	p.Root.Params[SendgridAPIKey] = value
 
 	return nil
 }
@@ -94,7 +98,7 @@ func (p *SendgridProvider) LoadEnv() error {
 // ToProvider ...
 func (p *SendgridProvider) ToProvider() *channel.Provider {
 	return &channel.Provider{
-		Name:   p.Name,
-		Params: p.Params,
+		Name:   p.Root.Name,
+		Params: p.Root.Params,
 	}
 }

@@ -7,8 +7,8 @@ import (
 	"strings"
 
 	"github.com/keighl/mandrill"
-	"github.com/microapis/messages-api"
-	"github.com/microapis/messages-api/channel"
+	"github.com/microapis/messages-lib/channel"
+	messagesemail "github.com/microapis/messages-email-api"
 	"github.com/stoewer/go-strcase"
 )
 
@@ -20,36 +20,33 @@ const (
 )
 
 // MandrillProvider ...
-type MandrillProvider channel.Provider
+type MandrillProvider struct {
+	Root channel.Provider
+}
 
 // NewMandrill ...
 func NewMandrill() *MandrillProvider {
 	p := &MandrillProvider{
-		Name:   MandrillName,
-		Params: make(map[string]string),
+		Root: channel.Provider{
+			Name:   MandrillName,
+			Params: make(map[string]string),
+		},
 	}
 
-	p.Params[MandrillAPIKey] = ""
+	p.Root.Params[MandrillAPIKey] = ""
 
 	return p
 }
 
-// Keys ...
-func (p *MandrillProvider) Keys() []string {
-	k := make([]string, 0)
-	k = append(k, MandrillAPIKey)
-	return k
-}
-
 // Approve ...
-func (p *MandrillProvider) Approve(*messages.Email) error {
+func (p *MandrillProvider) Approve(*messagesemail.Message) error {
 	return nil
 }
 
 // Deliver ...
-func (p *MandrillProvider) Deliver(m *messages.Email) error {
+func (p *MandrillProvider) Deliver(m *messagesemail.Message) error {
 	// create client
-	client := mandrill.ClientWithKey(p.Params[MandrillAPIKey])
+	client := mandrill.ClientWithKey(p.Root.Params[MandrillAPIKey])
 
 	// if not has HTML, set text message to HTML
 	if m.HTML == "" {
@@ -90,7 +87,7 @@ func (p *MandrillProvider) LoadEnv() error {
 		return errors.New("PROVIDER_" + env + " env value not defined")
 	}
 
-	p.Params[MandrillAPIKey] = value
+	p.Root.Params[MandrillAPIKey] = value
 
 	return nil
 }
@@ -98,7 +95,7 @@ func (p *MandrillProvider) LoadEnv() error {
 // ToProvider ...
 func (p *MandrillProvider) ToProvider() *channel.Provider {
 	return &channel.Provider{
-		Name:   p.Name,
-		Params: p.Params,
+		Name:   p.Root.Name,
+		Params: p.Root.Params,
 	}
 }

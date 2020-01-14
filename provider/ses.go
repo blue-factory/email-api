@@ -10,8 +10,8 @@ import (
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ses"
-	"github.com/microapis/messages-api"
-	"github.com/microapis/messages-api/channel"
+	"github.com/microapis/messages-lib/channel"
+	messagesemail "github.com/microapis/messages-email-api"
 	"github.com/stoewer/go-strcase"
 )
 
@@ -27,33 +27,37 @@ const (
 )
 
 // SESProvider ...
-type SESProvider channel.Provider
+type SESProvider struct {
+	Root channel.Provider
+}
 
 // NewSES ...
 func NewSES() *SESProvider {
 	p := &SESProvider{
-		Name:   SESName,
-		Params: make(map[string]string),
+		Root: channel.Provider{
+			Name:   SESName,
+			Params: make(map[string]string),
+		},
 	}
 
-	p.Params[SESAWSKeyID] = ""
-	p.Params[SESAWSSecretKey] = ""
-	p.Params[SESAWSRegion] = ""
+	p.Root.Params[SESAWSKeyID] = ""
+	p.Root.Params[SESAWSSecretKey] = ""
+	p.Root.Params[SESAWSRegion] = ""
 
 	return p
 }
 
 // Approve ...
-func (p *SESProvider) Approve(*messages.Email) error {
+func (p *SESProvider) Approve(*messagesemail.Message) error {
 	return nil
 }
 
 // Deliver ...
-func (p *SESProvider) Deliver(m *messages.Email) error {
+func (p *SESProvider) Deliver(m *messagesemail.Message) error {
 	// define aws config credentials
 	config := &aws.Config{
-		Region:      aws.String(p.Params[SESAWSRegion]),
-		Credentials: credentials.NewStaticCredentials(p.Params[SESAWSKeyID], p.Params[SESAWSSecretKey], ""),
+		Region:      aws.String(p.Root.Params[SESAWSRegion]),
+		Credentials: credentials.NewStaticCredentials(p.Root.Params[SESAWSKeyID], p.Root.Params[SESAWSSecretKey], ""),
 	}
 
 	// define aws session
@@ -115,7 +119,7 @@ func (p *SESProvider) LoadEnv() error {
 		return errors.New("PROVIDER_" + env + " env value not defined")
 	}
 
-	p.Params[SESAWSKeyID] = value
+	p.Root.Params[SESAWSKeyID] = value
 
 	env = strings.ToUpper(strcase.SnakeCase(SESAWSSecretKey))
 	value = os.Getenv("PROVIDER_" + env)
@@ -123,7 +127,7 @@ func (p *SESProvider) LoadEnv() error {
 		return errors.New("PROVIDER_" + env + " env value not defined")
 	}
 
-	p.Params[SESAWSSecretKey] = value
+	p.Root.Params[SESAWSSecretKey] = value
 
 	env = strings.ToUpper(strcase.SnakeCase(SESAWSRegion))
 	value = os.Getenv("PROVIDER_" + env)
@@ -131,7 +135,7 @@ func (p *SESProvider) LoadEnv() error {
 		return errors.New("PROVIDER_" + env + " env value not defined")
 	}
 
-	p.Params[SESAWSRegion] = value
+	p.Root.Params[SESAWSRegion] = value
 
 	return nil
 }
@@ -139,7 +143,7 @@ func (p *SESProvider) LoadEnv() error {
 // ToProvider ...
 func (p *SESProvider) ToProvider() *channel.Provider {
 	return &channel.Provider{
-		Name:   p.Name,
-		Params: p.Params,
+		Name:   p.Root.Name,
+		Params: p.Root.Params,
 	}
 }
