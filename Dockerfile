@@ -33,17 +33,11 @@ FROM alpine
 # Define service name
 ARG SVC=messages-email-api
 
-# Go to workdir
-WORKDIR /src/${SVC}
-
-# Install dependencies
-RUN apk add --update ca-certificates wget
-
 # Copy binaries
 COPY --from=builder /go/src/github.com/microapis/${SVC}/bin/${SVC} /usr/bin/${SVC}
 
 # Expose service port
-EXPOSE 5060
+EXPOSE 5050
 
 # Run service
-CMD ["/bin/sh", "-l", "-c", "$SVC"]
+ENTRYPOINT ["/usr/bin/messages-email-api"]

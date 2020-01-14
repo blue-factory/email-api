@@ -7,7 +7,8 @@ import (
 	"strconv"
 	"strings"
 
-	backendIot "github.com/microapis/messages-iot-api/backend"
+	"github.com/microapis/messages-email-api/messagesemail"
+	backendEmail "github.com/microapis/messages-email-api/backend"
 	"github.com/microapis/messages-lib/service"
 )
 
@@ -55,13 +56,13 @@ func main() {
 	}
 
 	// initialice message backend with Approve and Deliver methods
-	backend, err := backendIot.NewBackend(providers)
+	backend, err := backendEmail.NewBackend(providers)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	// initialize message service
-	svc, err := service.NewMessageService("Email", service.ServiceConfig{
+	svc, err := service.NewMessageService(messagesemail.Channel, service.ServiceConfig{
 		Port: port,
 
 		RedisHost:     redisHost,

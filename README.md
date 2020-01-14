@@ -52,7 +52,9 @@ Email {
 
 `make docker`: build docker.
 
-`docker run -it -p 5060:5060 messages-email-api`: run docker.
+`make r`: run service.
+
+`docker run -it -p 5050:5050 messages-email-api`: run docker.
 
 **Run messages service:**
 
