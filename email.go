@@ -15,4 +15,5 @@ type Message struct {
 	Text     string   `json:"text"`
 	HTML     string   `json:"html"`
 	Provider string   `json:"provider"`
+	Status   string   `json:"status"`
 }
