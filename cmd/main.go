@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/microapis/messages-email-api/messagesemail"
+	"github.com/microapis/messages-email-api"
 	backendEmail "github.com/microapis/messages-email-api/backend"
 	"github.com/microapis/messages-lib/service"
 )
