@@ -9,7 +9,7 @@ import (
 
 	"github.com/microapis/messages-email-api"
 	backendEmail "github.com/microapis/messages-email-api/backend"
-	"github.com/microapis/messages-lib/service"
+	"github.com/microapis/messages-core/service"
 )
 
 func main() {

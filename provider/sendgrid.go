@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/microapis/messages-lib/channel"
+	"github.com/microapis/messages-core/channel"
 	messagesemail "github.com/microapis/messages-email-api"
 
 	"github.com/sendgrid/sendgrid-go"

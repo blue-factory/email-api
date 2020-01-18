@@ -7,7 +7,7 @@ metadata:
     service: messages-email-api
 spec:
   ports:
-    - port: 5060
+    - port: 5050
       name: grpc
   selector:
     app: messages-email-api
@@ -38,12 +38,16 @@ spec:
         - name: messages-email-api
           image: microapis/messages-email-api:0.1.0
           ports:
-            - containerPort: 5060
+            - containerPort: 5050
           env:
             - name: PORT
-              value: "5060"
-            - name: HOST
-              value: messages-email-api
+              value: "5050"
+            - name: REDIS_HOST
+              value: messages-redis
+            - name: REDIS_PORT
+              value: 6379
+            - name: REDIS_DATABASE
+              value: 1
             - name: PROVIDERS
               value: sendgrid,mandrill,ses
             - name: PROVIDER_SENDGRID_API_KEY

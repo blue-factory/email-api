@@ -10,7 +10,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ses"
-	"github.com/microapis/messages-lib/channel"
+	"github.com/microapis/messages-core/channel"
 	messagesemail "github.com/microapis/messages-email-api"
 	"github.com/stoewer/go-strcase"
 )

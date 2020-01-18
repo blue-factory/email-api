@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/keighl/mandrill"
-	"github.com/microapis/messages-lib/channel"
+	"github.com/microapis/messages-core/channel"
 	messagesemail "github.com/microapis/messages-email-api"
 	"github.com/stoewer/go-strcase"
 )

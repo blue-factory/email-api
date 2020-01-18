@@ -8,7 +8,7 @@ import (
 
 	messagesemail "github.com/microapis/messages-email-api"
 	"github.com/microapis/messages-email-api/provider"
-	"github.com/microapis/messages-lib/channel"
+	"github.com/microapis/messages-core/channel"
 )
 
 var (
