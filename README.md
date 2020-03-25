@@ -57,7 +57,7 @@ Email {
 
 `REDIS_DATABASE`: define redis database number.
 
-`PROVIDERS`: define a []string of provider's names
+`PROVIDERS`: define string with providers separated by comma.
 
 `PROVIDER_SENDGRID_API_KEY`: define sendgrid provider api key.
 
