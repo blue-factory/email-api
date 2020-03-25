@@ -9,20 +9,20 @@
 # Internal variables
 #
 VERSION=0.2.3
-SVC=messages-email-api
+NAME=email
+SVC=$(NAME)-api
 BIN_PATH=$(PWD)/bin
 BIN=$(BIN_PATH)/$(SVC)
 REGISTRY_URL=$(DOCKER_USER)
 
-#
-# SVC variables
-#
-PORT=5050
+HOST=localhost
+PORT=5030
+
 REDIS_HOST=localhost
 REDIS_PORT=6379
 REDIS_DATABASE=1
 PROVIDERS=sendgrid,mandrill,ses
-PROVIDER_SENDGRID_API_KEY=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
+PROVIDER_SENDGRID_API_KEY=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
 PROVIDER_MANDRILL_API_KEY=456
 PROVIDER_SES_AWS_KEY_ID=789
 PROVIDER_SES_AWS_SECRET_KEY=012
@@ -34,15 +34,34 @@ clean c:
 
 run r:
 	@echo "[running] Running service..."
-	@PROVIDERS=$(PROVIDERS) PROVIDER_SENDGRID_API_KEY=$(PROVIDER_SENDGRID_API_KEY) PORT=$(PORT) REDIS_HOST=$(REDIS_HOST) REDIS_PORT=$(REDIS_PORT) REDIS_DATABASE=$(REDIS_DATABASE) PROVIDER_MANDRILL_API_KEY=$(PROVIDER_MANDRILL_API_KEY) PROVIDER_SES_AWS_KEY_ID=$(PROVIDER_SES_AWS_KEY_ID) PROVIDER_SES_AWS_SECRET_KEY=$(PROVIDER_SES_AWS_SECRET_KEY) PROVIDER_SES_AWS_REGION=$(PROVIDER_SES_AWS_REGION) go run cmd/main.go
+	@HOST=$(HOST) \
+	 PORT=$(PORT) \
+	 REDIS_HOST=$(REDIS_HOST) \
+	 REDIS_PORT=$(REDIS_PORT) \
+	 REDIS_DATABASE=$(REDIS_DATABASE) \
+	 PROVIDERS=$(PROVIDERS)	\
+	 PROVIDER_SENDGRID_API_KEY=$(PROVIDER_SENDGRID_API_KEY) \
+	 PROVIDER_MANDRILL_API_KEY=$(PROVIDER_MANDRILL_API_KEY) \
+	 PROVIDER_SES_AWS_KEY_ID=$(PROVIDER_SES_AWS_KEY_ID) \
+	 PROVIDER_SES_AWS_SECRET_KEY=$(PROVIDER_SES_AWS_SECRET_KEY) \
+	 PROVIDER_SES_AWS_REGION=$(PROVIDER_SES_AWS_REGION) \
+	 go run cmd/$(NAME)/main.go
 
-build b:
+build b: proto
 	@echo "[build] Building service..."
-	@cd cmd && go build -o $(BIN)
+	@cd cmd/$(NAME) && go build -o $(BIN)
 
-linux l: 
+linux l:
 	@echo "[build-linux] Building service..."
-	@cd cmd && GOOS=linux GOARCH=amd64 go build -o $(BIN)
+	@cd cmd/$(NAME) && GOOS=linux GOARCH=amd64 go build -o $(BIN)
+
+add-migration am: 
+	@echo "[add-migration] Adding migration"
+	@goose -dir "./database/migrations" create $(name) sql
+
+migrations m:
+	@echo "[migrations] Runing migrations..."
+	@cd database/migrations && goose postgres $(DSN) up
 
 docker d:
 	@echo "[docker] Building image..."
@@ -66,4 +85,19 @@ stop s:
 	@echo "[docker-compose] Stopping docker-compose..."
 	@docker-compose down
 
-.PHONY: clean c run r build b linux l docker d docker-login dl push p compose co stop s
+clean-proto cp:
+	@echo "[clean-proto] Cleaning proto files..."
+	@rm -rf proto/*.pb.go || true
+
+proto pro: clean-proto
+	@echo "[proto] Generating proto file..."
+	@protoc -I proto -I $(GOPATH)/src --go_out=plugins=grpc:./proto ./proto/*.proto 
+
+test t:
+	@echo "[test] Testing $(NAME)..."
+	@HOST=$(HOST) \
+	 PORT=$(PORT) \
+	 POSTGRES_DSN=$(POSTGRES_DSN) \
+	 go test -count=1 -v ./client/$(NAME)_test.go
+
+.PHONY: clean c run r build b linux l add-migration am migrations m docker d docker-login dl push p compose co stop s clean-proto cp proto pro test t
