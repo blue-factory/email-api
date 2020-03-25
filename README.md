@@ -37,12 +37,13 @@ Email {
 
 ## Service methods
 
-```go
 `Send(e *email.Message, delay int64) (string, error)`: send email message with delay, use delay=0 for send right now.
+
 `Get(ID string) (*email.Message, error)`: get email message by id.
+
 `Update(ID string, e *email.Message) error`: update email message by id.
+
 `Cancel(ID string) error`: cancel email message by id.
-```
 
 ## Environments Values
 
