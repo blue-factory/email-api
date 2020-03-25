@@ -20,15 +20,6 @@ In this api we will find the implementation of only 3 providers. Find **Provider
 | [Mandrill](https://mandrill.com/)      | Free Send 10,000 month.        | `MANDRIL_API_KEY`: string                                        |
 | [AWS SES](https://aws.amazon.com/ses/) | \$0.10 for every 1,000 emails. | `SES_AWS_KEY_ID`, `SES_AWS_SECRET_KEY`, `SES_AWS_REGION`: string |
 
-## gRPC Service
-
-```go
-service MessageBackendService {
-  rpc Approve(MessageBackendApproveRequest) returns (MessageBackendApproveResponse) {}
-  rpc Deliver(MessageBackendDeliverRequest) returns (MessageBackendDeliverResponse) {}
-}
-```
-
 ## Model
 
 ```go
@@ -44,36 +35,51 @@ Email {
 }
 ```
 
-## Commands (Development)
+## Service methods
 
-`make build`: build user service for osx.
-
-`make linux`: build user service for linux os.
-
-`make docker`: build docker.
-
-`make r`: run service.
-
-`docker run -it -p 5050:5050 email-api`: run docker.
-
-**Run messages service:**
-
-```sh
-HOST=<host> \
-PORT=<port> \
-MESSAGES_HOST=<messages-host> \
-MESSAGES_PORT=<messages-port> \
-PROVIDERS=<providers> \
-PROVIDER_SENDGRID_API_KEY=<> \
-PROVIDER_MANDRIL_API_KEY=<> \
-PROVIDER_SES_AWS_KEY_ID=<> \
-PROVIDER_SES_AWS_SECRET_KEY=<> \
-PROVIDER_SES_AWS_REGION=<> \
-./bin/messages-api
+```go
+func (c *Client) Send(e *email.Message, delay int64) (string, error)
+func (c *Client) Get(ID string) (*email.Message, error)
+func (c *Client) Update(ID string, e *email.Message) error
+func (c *Client) Cancel(ID string) error
 ```
 
-## TODO
+## Environments Values
 
-- [ ] Task 1.
-- [ ] Task 2.
-- [ ] Task 3.
+`PORT`: define email service port.
+
+`HOST`: define email service host.
+
+`REDIS_HOST`: define redis host.
+
+`REDIS_PORT`: define redis port.
+
+`REDIS_DATABASE`: define redis database number.
+
+`PROVIDERS`: define a []string of provider's names
+
+`PROVIDER_SENDGRID_API_KEY`: define sendgrid provider api key.
+
+`PROVIDER_MANDRILL_API_KEY`: define mandrill provider api key.
+
+`PROVIDER_SES_AWS_KEY_ID`: define aws key id.
+
+`PROVIDER_SES_AWS_SECRET_KEY`: define aws secret key.
+
+`PROVIDER_SES_AWS_REGION`: define aws region.
+
+## Commands (Development)
+
+`make build`: build restaurants service for osx.
+
+`make linux`: build restaurants service for linux os.
+
+`make docker .`: build docker.
+
+`make compose`: start docker-docker.
+
+`make stop`: stop docker-docker.
+
+`make run`: run email service.
+
+`docker run -it -p 5010:5010 email-api`: run docker.
