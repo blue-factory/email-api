@@ -6,9 +6,8 @@ import (
 	"fmt"
 	"log"
 
-	messagesemail "github.com/microapis/messages-email-api"
-	"github.com/microapis/messages-email-api/provider"
-	"github.com/microapis/messages-core/channel"
+	messagesemail "github.com/microapis/email-api"
+	"github.com/microapis/email-api/provider"
 )
 
 var (
@@ -28,24 +27,18 @@ type Backend struct {
 func NewBackend(providers []string) (*Backend, error) {
 	var err error
 
-	// define providers slice
-	pp := make([]*channel.Provider, 0)
-
 	// iterate over providers name
 	for _, v := range providers {
 		switch v {
 		case provider.SESName:
 			ses = provider.NewSES()
 			err = ses.LoadEnv()
-			pp = append(pp, ses.ToProvider())
 		case provider.SendgridName:
 			sendgrid = provider.NewSendgrid()
 			err = sendgrid.LoadEnv()
-			pp = append(pp, sendgrid.ToProvider())
 		case provider.MandrillName:
 			mandrill = provider.NewMandrill()
 			err = mandrill.LoadEnv()
-			pp = append(pp, mandrill.ToProvider())
 		}
 	}
 	if err != nil {

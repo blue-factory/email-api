@@ -2,7 +2,7 @@
 FROM golang:alpine AS builder
 
 # Define service name
-ARG SVC=messages-email-api
+ARG SVC=email-api
 
 # Install dependencies
 RUN apk add make
@@ -31,7 +31,7 @@ RUN make linux
 FROM alpine
 
 # Define service name
-ARG SVC=messages-email-api
+ARG SVC=email-api
 
 # Copy binaries
 COPY --from=builder /go/src/github.com/microapis/${SVC}/bin/${SVC} /usr/bin/${SVC}
@@ -40,4 +40,4 @@ COPY --from=builder /go/src/github.com/microapis/${SVC}/bin/${SVC} /usr/bin/${SV
 EXPOSE 5050
 
 # Run service
-ENTRYPOINT ["/usr/bin/messages-email-api"]
+ENTRYPOINT ["/usr/bin/email-api"]

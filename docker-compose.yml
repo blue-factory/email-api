@@ -8,13 +8,12 @@ services:
     image: redis
     ports:
       - 6379:6379
-
   #
-  # MESSAGES EMAIL API
+  # EMAIL API
   #
-  # messages-email-api:
-  #   container_name: messages-email-api
-  #   # image: microapis/messages-email-api:0.2.3
+  # email-api:
+  #   container_name: email-api
+  #   # image: microapis/email-api:0.2.3
   #   build: .
   #   ports:
   #     - 5050:5050

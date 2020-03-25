@@ -1,4 +1,4 @@
-package messagesemail
+package email
 
 const (
 	// Channel ...

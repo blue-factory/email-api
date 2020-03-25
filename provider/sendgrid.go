@@ -6,8 +6,8 @@ import (
 	"os"
 	"strings"
 
+	messagesemail "github.com/microapis/email-api"
 	"github.com/microapis/messages-core/channel"
-	messagesemail "github.com/microapis/messages-email-api"
 
 	"github.com/sendgrid/sendgrid-go"
 	"github.com/sendgrid/sendgrid-go/helpers/mail"
@@ -75,9 +75,17 @@ func (p *SendgridProvider) Deliver(m *messagesemail.Message) error {
 		return err
 	}
 
+	log.Println("=================")
+	log.Println("=================")
 	log.Println(response.StatusCode)
 	log.Println(response.Body)
 	log.Println(response.Headers)
+	log.Println("=================")
+	log.Println("=================")
+
+	if response.StatusCode >= 400 {
+		return errors.New(response.Body)
+	}
 
 	return nil
 }
@@ -93,12 +101,4 @@ func (p *SendgridProvider) LoadEnv() error {
 	p.Root.Params[SendgridAPIKey] = value
 
 	return nil
-}
-
-// ToProvider ...
-func (p *SendgridProvider) ToProvider() *channel.Provider {
-	return &channel.Provider{
-		Name:   p.Root.Name,
-		Params: p.Root.Params,
-	}
 }

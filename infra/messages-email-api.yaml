@@ -1,42 +1,42 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: messages-email-api
+  name: email-api
   labels:
-    app: messages-email-api
-    service: messages-email-api
+    app: email-api
+    service: email-api
 spec:
   ports:
     - port: 5050
       name: grpc
   selector:
-    app: messages-email-api
+    app: email-api
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: messages-email-api
+  name: email-api
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: messages-email-api
+  name: email-api
   labels:
-    app: messages-email-api
+    app: email-api
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: messages-email-api
+      app: email-api
   template:
     metadata:
       labels:
-        app: messages-email-api
+        app: email-api
     spec:
-      serviceAccountName: messages-email-api
+      serviceAccountName: email-api
       containers:
-        - name: messages-email-api
-          image: microapis/messages-email-api:0.1.0
+        - name: email-api
+          image: microapis/email-api:0.1.0
           ports:
             - containerPort: 5050
           env:

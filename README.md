@@ -54,7 +54,7 @@ Email {
 
 `make r`: run service.
 
-`docker run -it -p 5050:5050 messages-email-api`: run docker.
+`docker run -it -p 5050:5050 email-api`: run docker.
 
 **Run messages service:**
 

@@ -7,8 +7,8 @@ import (
 	"strings"
 
 	"github.com/keighl/mandrill"
+	messagesemail "github.com/microapis/email-api"
 	"github.com/microapis/messages-core/channel"
-	messagesemail "github.com/microapis/messages-email-api"
 	"github.com/stoewer/go-strcase"
 )
 
@@ -90,12 +90,4 @@ func (p *MandrillProvider) LoadEnv() error {
 	p.Root.Params[MandrillAPIKey] = value
 
 	return nil
-}
-
-// ToProvider ...
-func (p *MandrillProvider) ToProvider() *channel.Provider {
-	return &channel.Provider{
-		Name:   p.Root.Name,
-		Params: p.Root.Params,
-	}
 }
