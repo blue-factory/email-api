@@ -47,9 +47,9 @@ Email {
 
 ## Environments Values
 
-`PORT`: define email service port.
-
 `HOST`: define email service host.
+
+`PORT`: define email service port.
 
 `REDIS_HOST`: define redis host.
 
@@ -83,4 +83,4 @@ Email {
 
 `make run`: run email service.
 
-`docker run -it -p 5010:5010 email-api`: run docker.
+`docker run -it -p 5030:5030 email-api`: run docker.
