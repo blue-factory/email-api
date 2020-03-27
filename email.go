@@ -1,5 +1,9 @@
 package email
 
+import (
+	"github.com/microapis/users-api"
+)
+
 const (
 	// Channel ...
 	Channel = "email"
@@ -16,4 +20,12 @@ type Message struct {
 	HTML     string   `json:"html"`
 	Provider string   `json:"provider"`
 	Status   string   `json:"status"`
+}
+
+// MailingTemplates ...
+type MailingTemplates struct {
+	Signup          func(u *users.User) error
+	VerifyEmail     func(u *users.User, token string) error
+	ForgotPassword  func(u *users.User, token string) error
+	PasswordChanged func(u *users.User) error
 }
