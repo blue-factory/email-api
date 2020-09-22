@@ -27,26 +27,10 @@ func main() {
 
 	addr := fmt.Sprintf("%s:%s", host, port)
 
-	// get redis host env value
-	redisHost := os.Getenv("REDIS_HOST")
-	if redisHost == "" {
-		err := errors.New("invalid REDIS_HOST env value")
-		log.Fatal(err)
-	}
-
-	// get redis port env value
-	redisPort := os.Getenv("REDIS_PORT")
-	if redisPort == "" {
-		err := errors.New("invalid REDIS_PORT env value")
-		log.Fatal(err)
-	}
-
-	redisAddr := fmt.Sprintf("%s:%s", redisHost, redisPort)
-
-	// get redis database env value
-	redisDatabase := os.Getenv("REDIS_DATABASE")
-	if redisDatabase == "" {
-		err := errors.New("invalid REDIS_DATABASE env value")
+	// get redis url env value
+	redisURL := os.Getenv("REDIS_URL")
+	if redisURL == "" {
+		err := errors.New("invalid REDIS_URL env value")
 		log.Fatal(err)
 	}
 
@@ -58,5 +42,5 @@ func main() {
 	// define provider slice names
 	providers := strings.Split(providersEnv, ",")
 
-	email.Run(addr, redisAddr, redisDatabase, providers)
+	email.Run(addr, redisURL, providers)
 }

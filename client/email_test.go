@@ -1,4 +1,4 @@
-package client
+package emailclient_test
 
 import (
 	"fmt"
@@ -8,10 +8,9 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	email "github.com/microapis/email-api"
-	emailClient "github.com/microapis/email-api/client"
+	"github.com/microapis/email-api"
+	emailclient "github.com/microapis/email-api/client"
 	"github.com/microapis/messages-core/message"
-
 	"github.com/oklog/ulid"
 )
 
@@ -38,23 +37,29 @@ func TestSend(t *testing.T) {
 		t.Errorf(err.Error())
 	}
 
-	es, err := emailClient.New(host + ":" + port)
+	client, err := emailclient.New(host + ":" + port)
 	if err != nil {
 		log.Fatalln(err)
 	}
 
 	randomUUID := uuid.New()
 
+	toEmail := os.Getenv("TEST_TO_EMAIL")
+	if toEmail == "" {
+		fmt.Println("Create: missing env variable TEST_TO_EMAIL, using default...")
+		toEmail = fmt.Sprintf("fake_subject_%s")
+	}
+
 	e := &email.Message{
-		From:     "fake_email_" + randomUUID.String() + "@pensionatebien.cl",
-		FromName: "fake_user",
-		To:       []string{"camilo.aku@gmail.com"},
-		Subject:  "fake_subject",
-		Text:     "fake_text",
+		From:     "noreply@pensionatebien.cl",
+		FromName: "No reply",
+		To:       []string{toEmail},
+		Subject:  "fake_subject" + randomUUID.String(),
+		Text:     "fake_text" + randomUUID.String(),
 		Provider: "sendgrid",
 	}
 
-	id, err := es.Send(e, 3)
+	id, err := client.Send(e, 3)
 	if err != nil {
 		t.Errorf("TestSend: err %v", err)
 		return
@@ -66,7 +71,7 @@ func TestSend(t *testing.T) {
 		return
 	}
 
-	msg, err := es.Get(id)
+	msg, err := client.Get(id)
 	if err != nil {
 		t.Errorf("TestSend: err %v", err)
 		return
@@ -79,7 +84,7 @@ func TestSend(t *testing.T) {
 
 	time.Sleep(time.Duration(5) * time.Second)
 
-	msg, err = es.Get(id)
+	msg, err = client.Get(id)
 	if err != nil {
 		t.Errorf("TestSend: err %v", err)
 		return
@@ -98,7 +103,7 @@ func TestCancel(t *testing.T) {
 		t.Errorf(err.Error())
 	}
 
-	es, err := emailClient.New(host + ":" + port)
+	client, err := emailclient.New(host + ":" + port)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -114,13 +119,13 @@ func TestCancel(t *testing.T) {
 		Provider: "sendgrid",
 	}
 
-	id, err := es.Send(e, 3)
+	id, err := client.Send(e, 3)
 	if err != nil {
 		t.Errorf("TestCancel: err %v", err)
 		return
 	}
 
-	err = es.Cancel(id)
+	err = client.Cancel(id)
 	if err != nil {
 		t.Errorf("TestCancel: err %v", err)
 		return
@@ -128,7 +133,7 @@ func TestCancel(t *testing.T) {
 
 	time.Sleep(time.Duration(5) * time.Second)
 
-	msg, err := es.Get(id)
+	msg, err := client.Get(id)
 	if err != nil {
 		t.Errorf("TestCancel: err %v", err)
 		return
@@ -147,7 +152,7 @@ func TestUpdate(t *testing.T) {
 		t.Errorf(err.Error())
 	}
 
-	es, err := emailClient.New(host + ":" + port)
+	client, err := emailclient.New(host + ":" + port)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -163,7 +168,7 @@ func TestUpdate(t *testing.T) {
 		Provider: "sendgrid",
 	}
 
-	id, err := es.Send(e, 3)
+	id, err := client.Send(e, 3)
 	if err != nil {
 		t.Errorf("TestUpdate: err %v", err)
 		return
@@ -190,13 +195,13 @@ func TestUpdate(t *testing.T) {
 	expectedProvider := "sendgrid"
 	e.Provider = expectedProvider
 
-	err = es.Update(id, e)
+	err = client.Update(id, e)
 	if err != nil {
 		t.Errorf("TestUpdate: err %v", err)
 		return
 	}
 
-	msg, err := es.Get(id)
+	msg, err := client.Get(id)
 	if err != nil {
 		t.Errorf("TestUpdate: err %v", err)
 		return

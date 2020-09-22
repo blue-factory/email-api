@@ -2,7 +2,6 @@ package run
 
 import (
 	"log"
-	"strconv"
 
 	messagesemail "github.com/microapis/email-api"
 	backendEmail "github.com/microapis/email-api/backend"
@@ -10,13 +9,7 @@ import (
 )
 
 // Run ...
-func Run(address string, redisAddr string, redisDatabase string, providers []string) {
-	// parse redisDatabase string to int
-	rd, err := strconv.Atoi(redisDatabase)
-	if err != nil {
-		log.Fatal(err)
-
-	}
+func Run(address string, redisURL string, providers []string) {
 	// initialice message backend with Approve and Deliver methods
 	backend, err := backendEmail.NewBackend(providers)
 	if err != nil {
@@ -27,8 +20,7 @@ func Run(address string, redisAddr string, redisDatabase string, providers []str
 	svc, err := service.NewMessageService(messagesemail.Channel, service.ServiceConfig{
 		Addr: address,
 
-		RedisAddr:     redisAddr,
-		RedisDatabase: rd,
+		RedisURL: redisURL,
 
 		Approve: backend.Approve,
 		Deliver: backend.Deliver,
