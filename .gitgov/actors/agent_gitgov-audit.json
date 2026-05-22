@@ -1,0 +1,30 @@
+{
+  "header": {
+    "version": "1.0",
+    "type": "actor",
+    "payloadChecksum": "def3145b27c649d8aee11412a3064eb12c115e79a342670dee413c7f704eab04",
+    "signatures": [
+      {
+        "keyId": "agent:gitgov-audit",
+        "role": "author",
+        "notes": "Actor registration",
+        "signature": "/Cgkw2oVuBZ8XKJ0pxtsCmWrHBezGMmzVgn2v5cQQTXXjUSuDN48vdfsuo9ZWJauZaWWU5WRfsMgPGSUMDW2Cw==",
+        "timestamp": 1779488543
+      }
+    ]
+  },
+  "payload": {
+    "id": "agent:gitgov-audit",
+    "type": "agent",
+    "displayName": "GitGov Audit",
+    "publicKey": "0sqTTVPE2ApFLZvJpv3uEUTJ+HWzgWeaUY5tzA1PQ2w=",
+    "roles": [
+      "orchestrator"
+    ],
+    "status": "active",
+    "metadata": {
+      "joinedVia": "cli",
+      "joinedAt": "2026-05-22T22:22:23.418Z"
+    }
+  }
+}
