@@ -1,0 +1,34 @@
+{
+  "header": {
+    "version": "1.0",
+    "type": "agent",
+    "payloadChecksum": "55ff7e343ac4cdc4af61f70a9360f672582ce5feaebb2379e236afc8629181de",
+    "signatures": [
+      {
+        "keyId": "agent:review-advisor",
+        "role": "author",
+        "notes": "Agent registration",
+        "signature": "D3osYiLZYoyO92Tmtl4aEBGpjRvNkK1nK+uahoQZU+8B7O6G0jSXoii3VHCpWLY2wOlXLaUiYB5gn539wXE4AA==",
+        "timestamp": 1779488553
+      }
+    ]
+  },
+  "payload": {
+    "id": "agent:review-advisor",
+    "engine": {
+      "type": "local",
+      "runtime": "typescript",
+      "entrypoint": "@gitgov/agent-review-advisor",
+      "function": "runReviewAdvisor"
+    },
+    "status": "active",
+    "triggers": [],
+    "knowledge_dependencies": [],
+    "prompt_engine_requirements": {},
+    "metadata": {
+      "target": "findings",
+      "outputFormat": "feedback-review",
+      "purpose": "review"
+    }
+  }
+}
