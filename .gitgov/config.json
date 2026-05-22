@@ -1,0 +1,10 @@
+{
+  "protocolVersion": "1.0.0",
+  "projectId": "email-api",
+  "projectName": "email-api",
+  "rootCycle": "1779488544-cycle-root",
+  "saasUrl": "http://localhost:3001",
+  "state": {
+    "branch": "gitgov-state"
+  }
+}
