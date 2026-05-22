@@ -1,0 +1,30 @@
+{
+  "header": {
+    "version": "1.0",
+    "type": "actor",
+    "payloadChecksum": "732d2f85f7586f32523e62e81e865a68acf549d51594945d76744d7e82318bd6",
+    "signatures": [
+      {
+        "keyId": "agent:review-advisor",
+        "role": "author",
+        "notes": "Actor registration",
+        "signature": "cjtQW+vI6v4hue1aMM+NxT3rom0TlHt/F/ufwPNiUSpdEWuL4xDdaHTdHU0Y5N49eLsmyjFM5BKFFpgxB5lwDg==",
+        "timestamp": 1779488551
+      }
+    ]
+  },
+  "payload": {
+    "id": "agent:review-advisor",
+    "type": "agent",
+    "displayName": "Review Advisor",
+    "publicKey": "jWEaa5jku4Av7g0eWbUATK1EpvsuTk0643J94msrCTM=",
+    "roles": [
+      "specialist"
+    ],
+    "status": "active",
+    "metadata": {
+      "joinedVia": "cli",
+      "joinedAt": "2026-05-22T22:22:31.545Z"
+    }
+  }
+}
