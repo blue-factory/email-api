@@ -1,0 +1,22 @@
+{
+  "header": {
+    "version": "1.0",
+    "type": "cycle",
+    "payloadChecksum": "f7a5f272d1d30e989add856f6949713a78e9651fc1d7e5753e56871fb508fd11",
+    "signatures": [
+      {
+        "keyId": "human:cagodoy",
+        "role": "author",
+        "notes": "Cycle created",
+        "signature": "Kqy+CBP0EEw2RgZz37vR3X4Jo1BNxorcTLpzr/XWNdUh25qPUqIt5JxSVxBBhnzPWQm9XtEVIbKniwTcPaQkBA==",
+        "timestamp": 1779488544
+      }
+    ]
+  },
+  "payload": {
+    "id": "1779488544-cycle-root",
+    "title": "root",
+    "status": "planning",
+    "taskIds": []
+  }
+}
