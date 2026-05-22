@@ -1,0 +1,34 @@
+{
+  "header": {
+    "version": "1.0",
+    "type": "actor",
+    "payloadChecksum": "46dd83cd0c0c4758c287e1fc24aa5037eb688abeee9c7da2dd726bffc36c408a",
+    "signatures": [
+      {
+        "keyId": "human:cagodoy",
+        "role": "author",
+        "notes": "Actor registration",
+        "signature": "vJUgab3yrEkKoDfIVzgDfO9okHySrETYNk/udfOGLXbCQr8qTEPqdlsLRjB6/7AVc0gCy8YG+fmZI2atCIMBDQ==",
+        "timestamp": 1779488541
+      }
+    ]
+  },
+  "payload": {
+    "id": "human:cagodoy",
+    "type": "human",
+    "displayName": "cagodoy",
+    "publicKey": "vyjWtDq9r5/YnxErCmtLW7xl2FwlJqrTm/48syfigHM=",
+    "roles": [
+      "admin",
+      "author",
+      "approver:product",
+      "approver:quality",
+      "developer"
+    ],
+    "status": "active",
+    "metadata": {
+      "joinedVia": "cli",
+      "joinedAt": "2026-05-22T22:22:21.391Z"
+    }
+  }
+}
