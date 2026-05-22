@@ -1,0 +1,34 @@
+{
+  "header": {
+    "version": "1.0",
+    "type": "agent",
+    "payloadChecksum": "b3ec9507c6c87af9b806e878738f39fa140adf657472a12ea0b9fb9c814cad46",
+    "signatures": [
+      {
+        "keyId": "agent:security-audit",
+        "role": "author",
+        "notes": "Agent registration",
+        "signature": "moEnB2LzIyJd0wjCoibdOaBQ1sPKhfnUgwYyCvYiAYhf4kHg7ioljpMABVMDvN3NItjVugzVwq3oQAGOGVuGCQ==",
+        "timestamp": 1779488550
+      }
+    ]
+  },
+  "payload": {
+    "id": "agent:security-audit",
+    "engine": {
+      "type": "local",
+      "runtime": "typescript",
+      "entrypoint": "@gitgov/agent-security-audit",
+      "function": "runAgent"
+    },
+    "status": "active",
+    "triggers": [],
+    "knowledge_dependencies": [],
+    "prompt_engine_requirements": {},
+    "metadata": {
+      "target": "code",
+      "outputFormat": "sarif",
+      "purpose": "audit"
+    }
+  }
+}
