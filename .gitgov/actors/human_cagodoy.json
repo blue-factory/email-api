@@ -2,14 +2,14 @@
   "header": {
     "version": "1.0",
     "type": "actor",
-    "payloadChecksum": "46dd83cd0c0c4758c287e1fc24aa5037eb688abeee9c7da2dd726bffc36c408a",
+    "payloadChecksum": "44fa86d16c9cdf0466dfee822bb77e74292ad2d3cb40196f52d405972198b6cf",
     "signatures": [
       {
         "keyId": "human:cagodoy",
         "role": "author",
-        "notes": "Actor registration",
-        "signature": "vJUgab3yrEkKoDfIVzgDfO9okHySrETYNk/udfOGLXbCQr8qTEPqdlsLRjB6/7AVc0gCy8YG+fmZI2atCIMBDQ==",
-        "timestamp": 1779488541
+        "notes": "Key reconciliation",
+        "signature": "q5sNroVX6VL2npUcFf0hS2cxdXEcdScYNPlupr2P/Y5sP6J0UClApio2LT8Q+YZkIRhjZ+dN+tEG/07bp4ySBQ==",
+        "timestamp": 1782657980
       }
     ]
   },
@@ -17,7 +17,7 @@
     "id": "human:cagodoy",
     "type": "human",
     "displayName": "cagodoy",
-    "publicKey": "vyjWtDq9r5/YnxErCmtLW7xl2FwlJqrTm/48syfigHM=",
+    "publicKey": "8f72HloPZT1RptEXLTYuFG/yaVHn227IA3kO3t3G/nY=",
     "roles": [
       "admin",
       "author",
